@@ -56,6 +56,7 @@
     <ul class="nav-links">
       <li><a href="#salon">Le salon</a></li>
       <li><a href="#prestations">Prestations</a></li>
+      <li><a href="#guide">Ta coupe</a></li>
       <li><a href="#infos">Infos</a></li>
     </ul>
   </nav>
@@ -69,8 +70,9 @@
   <ul>
     <li><a href="#salon"><small>01</small>Le salon</a></li>
     <li><a href="#prestations"><small>02</small>Prestations</a></li>
-    <li><a href="#infos"><small>03</small>Infos</a></li>
-    <li><a href="#" class="js-book"><small>04</small>Réserver</a></li>
+    <li><a href="#guide"><small>03</small>Ta coupe</a></li>
+    <li><a href="#infos"><small>04</small>Infos</a></li>
+    <li><a href="#" class="js-book"><small>05</small>Réserver</a></li>
   </ul>
   <div class="menu-foot"><span>Réservation en ligne 24h/24</span><a class="js-insta" href="#" target="_blank" rel="noopener">@ms.barbero</a></div>
 </div>
@@ -212,6 +214,118 @@
       </a></li>
     </ul>
     <p class="services-note">Tarifs et disponibilités à jour sur la page de réservation.</p>
+  </section>
+
+  <!-- ===== Guide de coupe : le client compose sa demande ===== -->
+  <section class="guide" id="guide" aria-labelledby="guide-title">
+    <div class="services-head">
+      <div>
+        <p class="label">Ta coupe</p>
+        <h2 id="guide-title" data-rise>Dis-le<br><span class="outline">comme un pro.</span></h2>
+      </div>
+      <p data-rise>Pas sûr des bons mots pour expliquer ta coupe&nbsp;? Compose-la ici. Ta demande est prête à montrer au barbier&nbsp;: zéro malentendu, zéro surprise.</p>
+    </div>
+
+    <div class="guide-grid">
+      <div class="board" id="board">
+        <span class="corner tl">Fiche coupe</span>
+        <span class="corner tr">MS Barbero — N°7</span>
+        <span class="corner bl js-code">Moyen / Peau</span>
+        <span class="corner br">Vue de profil</span>
+        <svg viewBox="0 0 420 480" role="img" aria-labelledby="boardTitle boardDesc">
+          <title id="boardTitle">Aperçu de ta coupe</title>
+          <desc id="boardDesc" class="js-desc">Dégradé moyen à la peau, dessus moyen, sans barbe.</desc>
+          <defs>
+            <clipPath id="clipHead"><path d="M152 470C150 440 150 410 146 388C128 372 112 340 106 300C98 240 108 180 140 140C168 108 212 96 250 106C286 116 306 146 308 182C309 196 306 206 304 214C312 226 322 244 330 258C333 264 328 270 318 272L306 274C309 282 311 288 312 294C307 297 304 299 305 303C309 307 310 312 306 318C303 330 302 342 296 350C280 360 262 362 250 366C248 392 250 430 254 470Z"/></clipPath>
+            <clipPath id="clipZone"><path d="M292 150L270 172L256 198L242 222L234 246L237 262L226 268L210 300L176 380L150 394L20 430L20 20L336 20Z"/></clipPath>
+            <clipPath id="clipTop"><path d="M0 0H420V214H150L70 300H0Z"/></clipPath>
+            <linearGradient id="fadeGrad" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="285" y2="388">
+              <stop offset="0" stop-color="#0a0a0a"/>
+              <stop id="fadeEnd" offset="1" stop-color="#0a0a0a" stop-opacity="0"/>
+            </linearGradient>
+            <pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-24)"><line x1="0" y1="0" x2="0" y2="5" stroke="#f2f1ed" stroke-width="1"/></pattern>
+          </defs>
+
+          <g class="b-grid" stroke="#0a0a0a" stroke-opacity=".06" stroke-width="1">
+            <path d="M0 60H420M0 120H420M0 180H420M0 240H420M0 300H420M0 360H420M0 420H420M60 0V480M120 0V480M180 0V480M240 0V480M300 0V480M360 0V480"/>
+          </g>
+
+          <path class="b-skin" d="M152 470C150 440 150 410 146 388C128 372 112 340 106 300C98 240 108 180 140 140C168 108 212 96 250 106C286 116 306 146 308 182C309 196 306 206 304 214C312 226 322 244 330 258C333 264 328 270 318 272L306 274C309 282 311 288 312 294C307 297 304 299 305 303C309 307 310 312 306 318C303 330 302 342 296 350C280 360 262 362 250 366C248 392 250 430 254 470Z" fill="#f2f1ed"/>
+
+          <g class="b-hair" clip-path="url(#clipZone)">
+            <g clip-path="url(#clipTop)">
+              <path id="hairVol" transform="translate(220 330) scale(1.03 1.09) translate(-220 -330)" d="M152 470C150 440 150 410 146 388C128 372 112 340 106 300C98 240 108 180 140 140C168 108 212 96 250 106C286 116 306 146 308 182C309 196 306 206 304 214C312 226 322 244 330 258C333 264 328 270 318 272L306 274C309 282 311 288 312 294C307 297 304 299 305 303C309 307 310 312 306 318C303 330 302 342 296 350C280 360 262 362 250 366C248 392 250 430 254 470Z" fill="#0a0a0a"/>
+            </g>
+            <g clip-path="url(#clipHead)">
+              <rect width="420" height="480" fill="url(#fadeGrad)"/>
+              <rect width="420" height="480" fill="url(#hatch)" opacity=".1"/>
+            </g>
+          </g>
+
+          <g clip-path="url(#clipHead)">
+            <path id="beardFull" d="M236 262C236 296 246 330 282 350C290 354 298 352 300 348L305 320C292 317 282 311 274 300C262 284 252 272 244 262Z" fill="#0a0a0a" opacity="0"/>
+            <path id="beardMous" d="M306 274C300 282 294 288 288 291C296 293 304 292 311 292C310 286 309 280 306 274Z" fill="#0a0a0a" opacity="0"/>
+          </g>
+          <path id="beardLines" d="M236 263C238 300 252 338 296 351" fill="none" stroke="#0a0a0a" stroke-width="3.2" stroke-linecap="round" opacity="0"/>
+
+          <g class="b-line" fill="none" stroke="#0a0a0a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path class="b-outline" d="M152 470C150 440 150 410 146 388C128 372 112 340 106 300C98 240 108 180 140 140C168 108 212 96 250 106C286 116 306 146 308 182C309 196 306 206 304 214C312 226 322 244 330 258C333 264 328 270 318 272L306 274C309 282 311 288 312 294C307 297 304 299 305 303C309 307 310 312 306 318C303 330 302 342 296 350C280 360 262 362 250 366C248 392 250 430 254 470"/>
+            <path class="b-outline" d="M196 230C214 222 226 240 222 262C219 280 206 290 196 284C190 278 188 270 192 262C186 252 186 238 196 230Z" fill="#f2f1ed"/>
+            <path class="b-outline" d="M203 246C212 246 214 262 206 270" stroke-width="1.6"/>
+            <path class="b-outline" d="M280 207C286 204 292 205 297 208" stroke-width="1.8"/>
+            <path class="b-outline" d="M275 196C285 190 296 191 303 195" stroke-width="1.8"/>
+          </g>
+
+          <g class="b-ruler" font-family="Manrope, sans-serif" font-size="8.5" font-weight="700" letter-spacing="1.6" fill="#0a0a0a">
+            <line x1="52" y1="214" x2="52" y2="398" stroke="#0a0a0a" stroke-opacity=".35"/>
+            <g stroke="#0a0a0a" stroke-opacity=".35"><line x1="46" y1="232" x2="58" y2="232"/><line x1="46" y1="285" x2="58" y2="285"/><line x1="46" y1="335" x2="58" y2="335"/><line x1="46" y1="352" x2="58" y2="352"/></g>
+            <text x="42" y="235" text-anchor="end" fill-opacity=".55">HAUT</text>
+            <text x="42" y="288" text-anchor="end" fill-opacity=".55">MOYEN</text>
+            <text x="42" y="338" text-anchor="end" fill-opacity=".55">BAS</text>
+            <text x="42" y="355" text-anchor="end" fill-opacity=".55">TAPER</text>
+          </g>
+
+          <g id="fadeLine" transform="translate(0 285)">
+            <line x1="60" x2="414" y1="0" y2="0" stroke="#0a0a0a" stroke-width="1.2" stroke-dasharray="4 5"/>
+            <circle cx="52" cy="0" r="4.5" fill="#0a0a0a"/>
+            <text x="414" y="-21" text-anchor="end" font-family="Manrope, sans-serif" font-size="10" font-weight="700" letter-spacing="2" fill="#0a0a0a"><tspan id="fadeTag1">DÉGRADÉ</tspan><tspan id="fadeTag2" x="414" dy="12">MOYEN</tspan></text>
+          </g>
+        </svg>
+      </div>
+
+      <form class="builder" id="builder" onsubmit="return false">
+        <fieldset>
+          <legend><span>01</span> Hauteur du dégradé</legend>
+          <div class="chips" data-group="height"></div>
+          <p class="hint" data-hint="height" aria-live="polite"></p>
+        </fieldset>
+        <fieldset>
+          <legend><span>02</span> Finition du bas</legend>
+          <div class="chips" data-group="finish"></div>
+          <p class="hint" data-hint="finish" aria-live="polite"></p>
+        </fieldset>
+        <fieldset>
+          <legend><span>03</span> Longueur du dessus</legend>
+          <div class="chips" data-group="top"></div>
+          <p class="hint" data-hint="top" aria-live="polite"></p>
+        </fieldset>
+        <fieldset>
+          <legend><span>04</span> Barbe</legend>
+          <div class="chips" data-group="beard"></div>
+          <p class="hint" data-hint="beard" aria-live="polite"></p>
+        </fieldset>
+
+        <div class="ticket">
+          <small>Ta demande</small>
+          <p class="req js-req">Dégradé moyen à la peau, dessus moyen, sans barbe.</p>
+          <div class="ticket-row">
+            <button type="button" class="btn btn-paper js-copy">Copier ma demande <span class="chip"><svg aria-hidden="true"><use href="#i-arrow"/></svg></span></button>
+            <a class="btn btn-ghost js-book" href="#" data-cursor>Réserver</a>
+          </div>
+          <p class="ticket-status js-status" role="status">Copie-la ou fais une capture&nbsp;: tu n'auras plus qu'à la montrer en arrivant.</p>
+        </div>
+      </form>
+    </div>
   </section>
 
   <!-- ===== Réservation & infos ===== -->

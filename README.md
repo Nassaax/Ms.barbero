@@ -44,4 +44,13 @@ assets/favicon.svg, apple-touch-icon.png
 - Titre « Ton fauteuil t'attend » lettre par lettre ; sceau « Réserver » magnétique et rotatif.
 - Scroll fluide (Lenis), curseur anneau sur desktop, grain argentique.
 - Bouton « Réserver » toujours accessible (flottant, barre en bas sur mobile).
+
+## Guide de coupe « Dis-le comme un pro » (section `#guide`)
+Élément de confiance : le client compose sa coupe (hauteur du dégradé, finition du bas, longueur du dessus, barbe)
+sur une fiche technique dessinée en SVG qui s'anime en direct. Il obtient une demande claire à copier
+et à montrer au barbier. Pas de malentendu, pas de mauvaise surprise.
+- Les options et leurs explications sont dans `assets/js/main.js` (bloc `2b. GUIDE DE COUPE`, objet `OPTS`).
+- Le dernier choix est mémorisé dans le navigateur du visiteur.
+- **À valider avec le client :** les termes utilisés (bas / moyen / haut / taper, à la peau / très court / court)
+  et les explications. Il peut vouloir ajouter ses propres options (ex. dessins, contours au rasoir).
 - `prefers-reduced-motion` respecté : tout s'affiche sans animation. Si le JS échoue, le contenu reste visible.

@@ -102,6 +102,7 @@
 
   let lastY = window.scrollY;
   let bookInView = false;
+  const fabBlockers = new Set();
   function updateFab() {
     const y = window.scrollY;
     const on = y > window.innerHeight * 0.85 && !bookInView && !body.classList.contains('menu-open');
@@ -117,7 +118,11 @@
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   if ('IntersectionObserver' in window) {
-    new IntersectionObserver((entries) => { bookInView = entries[0].isIntersecting; updateFab(); }, { threshold: 0.12 }).observe($('#infos'));
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { if (en.isIntersecting) fabBlockers.add(en.target); else fabBlockers.delete(en.target); });
+      bookInView = fabBlockers.size > 0; updateFab();
+    }, { threshold: 0.12 });
+    ['#infos', '#guide .ticket'].forEach((s) => { const t = $(s); if (t) io.observe(t); });
   }
   onScroll();
 
@@ -134,6 +139,108 @@
       requestAnimationFrame(loop);
     })();
   }
+
+  /* =========================================================
+     2b. GUIDE DE COUPE — le client compose sa demande
+     ========================================================= */
+  (function guide() {
+    const form = $('#builder');
+    if (!form) return;
+    const OPTS = {
+      height: [
+        { v: 'low', label: 'Bas', y: 335, txt: 'Dégradé bas', tag: ['DÉGRADÉ', 'BAS'], code: 'Bas', hint: 'Le fondu reste près des oreilles et de la nuque. Discret, idéal pour un premier dégradé.' },
+        { v: 'mid', label: 'Moyen', y: 285, txt: 'Dégradé moyen', tag: ['DÉGRADÉ', 'MOYEN'], code: 'Moyen', hint: "Le fondu monte jusqu'aux tempes. Polyvalent, il va avec presque tous les styles." },
+        { v: 'high', label: 'Haut', y: 232, txt: 'Dégradé haut', tag: ['DÉGRADÉ', 'HAUT'], code: 'Haut', hint: 'Le fondu remonte haut sur les côtés. Contraste fort avec le dessus, look affirmé.' },
+        { v: 'taper', label: 'Taper', y: 352, txt: 'Taper', tag: ['FONDU', 'TAPER'], code: 'Taper', hint: 'Seules la nuque et les pattes sont dégradées. Le plus naturel quand ça repousse.' }
+      ],
+      finish: [
+        { v: 'skin', label: 'À la peau', o: 0, txt: 'à la peau', code: 'Peau', hint: 'Le bas est rasé à blanc : contraste maximal, rendu très net.' },
+        { v: 'xshort', label: 'Très court', o: 0.3, txt: 'fini très court', code: 'Très court', hint: "Une fine ombre de cheveux reste visible. Plus doux qu'à la peau." },
+        { v: 'short', label: 'Court', o: 0.55, txt: 'fini court', code: 'Court', hint: 'Le bas garde un peu de longueur : transition tout en douceur.' }
+      ],
+      top: [
+        { v: 'short', label: 'Court', s: 1.03, txt: 'dessus court', hint: 'Facile à coiffer, net dès le réveil.' },
+        { v: 'mid', label: 'Moyen', s: 1.09, txt: 'dessus moyen', hint: 'Assez de longueur pour texturer, plaquer ou coiffer en arrière.' },
+        { v: 'long', label: 'Long', s: 1.2, txt: 'dessus long', hint: 'Du volume et du mouvement sur le dessus.' }
+      ],
+      beard: [
+        { v: 'none', label: 'Sans', txt: 'sans barbe', hint: 'On se concentre sur la coupe.' },
+        { v: 'lines', label: 'Contours', txt: 'contours de barbe nets', hint: 'On garde ta longueur, on redessine des lignes propres.' },
+        { v: 'full', label: 'Taillée', txt: 'barbe taillée avec contours', hint: 'Longueur égalisée, volume maîtrisé et contours nets.' }
+      ]
+    };
+    const DEF = { height: 'mid', finish: 'skin', top: 'mid', beard: 'none' };
+    let state = Object.assign({}, DEF);
+    try { const saved = JSON.parse(localStorage.getItem('ms-coupe') || 'null'); if (saved) Object.keys(DEF).forEach((k) => { if (OPTS[k].some((o) => o.v === saved[k])) state[k] = saved[k]; }); } catch (e) { /* stockage indisponible */ }
+
+    // Construit les puces (vrais boutons radio, accessibles au clavier)
+    Object.keys(OPTS).forEach((g) => {
+      $(`[data-group="${g}"]`, form).innerHTML = OPTS[g].map((o) =>
+        `<label class="opt"><input type="radio" name="${g}" value="${o.v}"${state[g] === o.v ? ' checked' : ''}><span>${esc(o.label)}</span></label>`).join('');
+    });
+
+    const pick = (g) => OPTS[g].find((o) => o.v === state[g]);
+    const svg = $('#board svg');
+    const el = {
+      grad: $('#fadeGrad', svg), end: $('#fadeEnd', svg), vol: $('#hairVol', svg), line: $('#fadeLine', svg), tag1: $('#fadeTag1', svg), tag2: $('#fadeTag2', svg),
+      full: $('#beardFull', svg), mous: $('#beardMous', svg), lines: $('#beardLines', svg)
+    };
+    const cur = { y: pick('height').y, o: pick('finish').o, s: pick('top').s, bf: 0, bl: 0 };
+    const target = () => ({
+      y: pick('height').y, o: pick('finish').o, s: pick('top').s,
+      bf: state.beard === 'full' ? 1 : 0, bl: state.beard === 'none' ? 0 : 1
+    });
+    const render = () => {
+      el.grad.setAttribute('y1', cur.y.toFixed(2));
+      el.end.setAttribute('stop-opacity', cur.o.toFixed(3));
+      el.vol.setAttribute('transform', `translate(220 330) scale(${(1 + (cur.s - 1) * 0.35).toFixed(4)} ${cur.s.toFixed(4)}) translate(-220 -330)`);
+      el.line.setAttribute('transform', `translate(0 ${cur.y.toFixed(2)})`);
+      el.full.setAttribute('opacity', (cur.bf * 0.92).toFixed(3));
+      el.mous.setAttribute('opacity', (cur.bf * 0.92).toFixed(3));
+      el.lines.setAttribute('opacity', cur.bl.toFixed(3));
+    };
+    const sentence = () => {
+      const h = pick('height'), f = pick('finish'), t = pick('top'), b = pick('beard');
+      return `${h.txt} ${f.txt}, ${t.txt}, ${b.txt}.`;
+    };
+    const update = (animate) => {
+      Object.keys(OPTS).forEach((g) => { $(`[data-hint="${g}"]`, form).textContent = pick(g).hint; });
+      const text = sentence();
+      $('.js-req').textContent = text;
+      $('.js-desc').textContent = text;
+      $('.js-code').textContent = `${pick('height').code} / ${pick('finish').code}`;
+      el.tag1.textContent = pick('height').tag[0];
+      el.tag2.textContent = pick('height').tag[1];
+      const t = target();
+      if (animate && window.gsap && !reduce) {
+        window.gsap.to(cur, { ...t, duration: 0.9, ease: 'expo.out', overwrite: true, onUpdate: render });
+        window.gsap.fromTo('.js-req', { yPercent: 18, opacity: 0.2 }, { yPercent: 0, opacity: 1, duration: 0.5, ease: 'power3.out', overwrite: true });
+      } else { Object.assign(cur, t); render(); }
+      try { localStorage.setItem('ms-coupe', JSON.stringify(state)); } catch (e) { /* stockage indisponible */ }
+    };
+    form.addEventListener('change', (e) => {
+      if (!e.target.name || !OPTS[e.target.name]) return;
+      state[e.target.name] = e.target.value;
+      update(true);
+      $('.js-status').classList.remove('ok');
+    });
+    update(false);
+
+    // Copier la demande (presse-papiers, avec repli)
+    const status = $('.js-status');
+    $('.js-copy').addEventListener('click', async () => {
+      const text = `Ma demande pour MS Barbero : ${sentence()}`;
+      let ok = false;
+      try { await navigator.clipboard.writeText(text); ok = true; } catch (e) {
+        const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { ok = document.execCommand('copy'); } catch (e2) { ok = false; }
+        ta.remove();
+      }
+      status.textContent = ok ? 'Demande copiée. Garde-la sous la main pour la montrer au barbier en arrivant.' : "La copie n'a pas marché : fais simplement une capture de la fiche.";
+      status.classList.toggle('ok', ok);
+    });
+  })();
 
   /* =========================================================
      3. MOTION (GSAP + ScrollTrigger + Lenis)
@@ -325,6 +432,16 @@
       gsap.to(els.map((s) => $('a', s)), { autoAlpha: 1, y: 0, duration: 1, stagger: 0.09, delay: 0.15, ease: 'power3.out' });
     }
   });
+
+  /* ---- 3h-bis. Guide de coupe : la fiche se dessine au trait ---- */
+  const outlines = $$('#board .b-outline');
+  outlines.forEach((p) => { const L = p.getTotalLength(); gsap.set(p, { strokeDasharray: L, strokeDashoffset: L }); });
+  gsap.set(['#board .b-hair', '#board .b-ruler', '#fadeLine'], { opacity: 0 });
+  gsap.timeline({ scrollTrigger: { trigger: '#board', start: 'top 75%' } })
+    .to(outlines, { strokeDashoffset: 0, duration: 1.6, ease: 'power2.inOut', stagger: 0.08 })
+    .to('#board .b-hair', { opacity: 1, duration: 0.9, ease: 'power2.out' }, '-=0.9')
+    .to(['#board .b-ruler', '#fadeLine'], { opacity: 1, duration: 0.7, stagger: 0.12 }, '-=0.5');
+  gsap.from('#builder fieldset, #builder .ticket', { autoAlpha: 0, y: 30, duration: 0.9, stagger: 0.08, ease: 'power3.out', scrollTrigger: { trigger: '#builder', start: 'top 80%' } });
 
   /* ---- 3i. Réservation : titre lettre par lettre, fond en parallaxe, sceau magnétique ---- */
   $$('[data-chars] .mask > span').forEach((line) => {
